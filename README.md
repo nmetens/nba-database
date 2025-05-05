@@ -4,7 +4,7 @@ Instructor: Esme Basnet
 
 # Introduction
 
-    I want to build a database about National Basketball Association (NBA) data. More specifically, 
+I want to build a database about National Basketball Association (NBA) data. More specifically, 
 I want to keep track of my favorite players, their statistics, teams, and awards. There are many 
 NBA athletes that I like to watch: Steph Curry, LeBron James, Damian Lillard, Luka Doncic, Jimmy 
 Butler, Anthony Edwards, and so on. I always go to NBA.com to see the latest NBA games, and 
@@ -12,7 +12,8 @@ how many points a player scored, how many 3-pointers they made, and other fun st
 like to go back in history and watch older players like Michael Jordan, Kobe Bryant, and Tracy McGrady. 
 Seeing stats from varying moments in history gives me an idea of who the best players were and what 
 they did. This is entertaining to me. There is no shortage of sports data.
-    Some valuable information I look at is player age, points per game, and how many MVP or Championship 
+
+Some valuable information I look at is player age, points per game, and how many MVP or Championship 
 trophies they have. I sometimes check the 3-point and free-throw percentage. I love accolades and 
 good performances because they make my heart beat faster. Creating a database with my favorite players 
 and data will give me lots of practice and easily accessible information I can update and reference in the future.
@@ -42,11 +43,12 @@ and data will give me lots of practice and easily accessible information I can u
 
 # Resources:
 
-    For creating this database, I plan on using [this website](https://www.basketball-reference.com). 
+For creating this database, I plan on using [this website](https://www.basketball-reference.com). 
 This website has all of the NBA data from each year in the history of the NBA in easy to use format. 
 I’ll have access tables that can be turned into csv files. This will make it simple to transfer the 
 data into tables in the database.
-    I also will be using a Python module called nba_api which uses all the data from NBA.com at 
+
+I also will be using a Python module called nba_api which uses all the data from NBA.com at 
 endpoints on the web that are accessible via Python and store the data into JSON format. The documentation 
 for this module is found on [GitHub and is open source](https://github.com/swar/nba_api/blob/master/docs/nba_api/stats/static/players.md). 
 This way, I’ll be able to practice data science in Python and also manage my database using PostgreSQL. 
@@ -61,6 +63,8 @@ I’m excited to learn and get started with my database.
 - [Postresql Docs](https://www.postgresql.org/docs/current/runtime-config-connection.html)
 - Postresql Python Library [Psycopg](https://www.psycopg.org/docs/)
 - [Port for signing into the PSU database](https://www.postgresql.org/docs/current/runtime-config-connection.html)
+- [Looping throw file](https://docs.python.org/3/tutorial/inputoutput.html#methods-of-file-objects)
+- [Cursor for db queries](https://www.freecodecamp.org/news/postgresql-in-python/)
 
 # Tutorials
 
