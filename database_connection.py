@@ -18,8 +18,11 @@ def create_connection(db_name, db_user, db_password, db_host, db_port):
             port=db_port,
         )
         logging.info("Connection to PostgreSQL DB successful")
+        print("Connection to PostgreSQL DB successful")
     except OperationalError as e:
         logging.error(f"OperationalError: {e}")
+        print("Connection to PostgreSQL DB successful")
     except Exception as e:
         logging.error(f"An unexpected error occurred: {e}")
+        print("Connection to PostgreSQL DB successful")
     return connection

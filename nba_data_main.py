@@ -19,9 +19,21 @@ def main():
     db_user = 'spr25adb0047'
     db_password = os.environ['password'] # Getting my local environment var for privacy
     db_host = 'dbclass.cs.pdx.edu'
-    db_port = 5432 #  https://www.postgresql.org/docs/current/runtime-config-connection.html 
+    db_port = 5432 
 
-    db.create_connection(db_name, db_user, db_password, db_host, db_port)
+    conn = db.create_connection(db_name, db_user, db_password, db_host, db_port) # Returns a connection
+
+    # Source: https://www.freecodecamp.org/news/postgresql-in-python/
+    cursor = conn.cursor() # Get the cursor from the connection to execute queries
+
+    # Execute a query on the database connection:
+    cursor.execute("SELECT * FROM spy.agent WHERE agent_id = 1")
+
+    agent1 = cursor.fetchone()
+    print(agent1)
+
+    # Create the Player table:
+    #cursor.execute
 
 if __name__ == "__main__":
     main()
