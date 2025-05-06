@@ -50,6 +50,8 @@ def main():
 	'Klay Thompson'
     ]
 
+    # Add a ppg column for each player:
+    cursor.execute('alter table nba.players add column ppg float;')
     # Add a full_name column for the player name:
     cursor.execute('alter table nba.players add column full_name varchar(30);')
 
@@ -57,6 +59,7 @@ def main():
        cursor.execute(i.insert_into_players(player, active_players)) # execute insert statement
        # Adding the player name in each row corresponding to the player_id:
        cursor.execute(f'UPDATE nba.Players SET full_name=\'{player}\' where player_id = {i.get_player_id(player, active_players)};')
+       cursor.execute(f'update nba.Players set ppg=(pts/gp) where player_id={i.get_player_id(player, active_players)};')
 
     conn.commit()
 

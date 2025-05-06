@@ -1,3 +1,3 @@
-# Reference: @davevad93 on GitHub
+# Reference: @davevad93 on GitHub (https://github.com/orgs/community/discussions/146009)
 *.sql linguist-language=SQL
 *.sql linguist-detectable=true

@@ -29,5 +29,3 @@ def insert_into_players(player_name: str, active_players: list) -> str:
 		f'values {data};'
 	)
 	return insert
-
-
