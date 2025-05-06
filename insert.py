@@ -20,6 +20,7 @@ def insert_into_players(player_name: str, active_players: list) -> str:
 	vals = ', '.join(['%s'] * len(df.columns)) # '%s' separated by cols * total cols
 
 	row_list = df.iloc[0].tolist()     # get the first fow of data
+	#row_list.append(player_name)
 	data = tuple(row_list) 
 
 	# https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html
