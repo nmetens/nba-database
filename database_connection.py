@@ -26,3 +26,23 @@ def create_connection(db_name, db_user, db_password, db_host, db_port):
         logging.error(f"An unexpected error occurred: {e}")
         print("Connection to PostgreSQL DB successful")
     return connection
+
+# Query method:
+def query(file, cursor):
+    """ 
+        Arguments
+        file: the name of the sql file that holds the query.
+        cursor: the cursor connected to the databse.
+
+        Opens a file for reading. Makes the contents of the file
+        an sql query that is executed by the cursor in the database: 
+
+        Returns the cursor object.
+    """
+    try:
+        with open(file, 'r') as query:
+            sql = query.read()	
+            cursor.execute(sql)
+    except Exception as e:
+        print(f"Error executing query: {e}") 
+    return cursor
