@@ -6,8 +6,11 @@ import psycopg2
 from psycopg2 import OperationalError
 import logging
 
-# Method to connect to the PSU server database with environment variable credentials:
 def create_connection(db_name, db_user, db_password, db_host, db_port):
+    """ Method to connect to the PSU server database with 
+        environment variable credentials. Returns a connetion
+        on successful login.
+    """
     connection = None
     try:
         connection = psycopg2.connect(
@@ -27,7 +30,6 @@ def create_connection(db_name, db_user, db_password, db_host, db_port):
         print("Connection to PostgreSQL DB successful")
     return connection
 
-# Query method:
 def query(file, cursor):
     """ 
         Arguments

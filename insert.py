@@ -1,7 +1,9 @@
 import pandas as pd
 
-# Get the id of the player in the active players list:
 def get_player_id(name: str, active_players: list):
+	""" Get the player id from the API using the 
+	player's full_name from the active_players list.
+	"""
 	for player in active_players:
 		if player['full_name'] == name:
 			return player['id']
@@ -11,17 +13,15 @@ def insert(df, table: str):
 	we can create an insert statement for the 
 	table and return it.
 	"""
-
 	df = df.astype(object)
 
-	columns = ', '.join(df.columns)
-	row_list = df.iloc[0].tolist()
-	data = tuple(row_list)
+	columns = ', '.join(df.columns) # Separates the data by comma
+	placeholders = ', '.join(['%s'] * len(df.columns)) # Creates tuple with '%s' for each column
+	row_list = df.iloc[0].tolist() # Gets all the data from a row in the df and turns it into a list
+	data = tuple(row_list) # Turn list into tuple
 
-	# https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html
 	insert = ( # create insert statement:
 		f'insert into nba.{table} ({columns}) '
-		f'values {data};'
+		f'values ({placeholders});'
 	)
-	return insert
-
+	return insert, data 

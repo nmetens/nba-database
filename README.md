@@ -65,6 +65,7 @@ I’m excited to learn and get started with my database.
 - [Port for signing into the PSU database](https://www.postgresql.org/docs/current/runtime-config-connection.html)
 - [Looping throw file](https://docs.python.org/3/tutorial/inputoutput.html#methods-of-file-objects)
 - [Cursor for db queries](https://www.freecodecamp.org/news/postgresql-in-python/)
+- [Insert Formatting](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html)
 
 # Tutorials
 
