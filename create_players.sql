@@ -60,3 +60,71 @@ nba.PlayerAward (
 	season_id int references nba.Season(season_id), -- Foreign Key
 	primary key (player_id, award_id, season_id) -- Composite Key
 );
+
+-- Creating the PlayerTeamSeason table: --
+create table if not exists
+nba.PlayerTeamSeason (
+	player_id int references nba.Player(player_id),
+	team_id int references nba.Team(team_id),
+	season_id int references nba.Season(season_id),
+	jersey_number int,
+	primary key (player_id, team_id, season_id)	
+);
+
+-- Create the RegularSeasonStats table: --
+create table if not exists
+nba.RegularSeasonStats (
+	stat_id serial primary key,
+
+	player_id int references nba.Player(player_id),
+	season_id int references nba.Season(season_id),
+	team_id int references nba.Team(team_id),
+	
+	games_played int,
+	minutes_per_game float,
+	ppg float, -- points per game
+	fgm float, -- field goals (fg) made
+	fga float, -- fg attempted
+	fgp float, -- fg percentage (%)
+	tpm float, -- three pointers (tp) made
+	tpa float, -- tp attempted
+	tpp float, -- tp %
+	ftm float, -- free throws (ft)
+	fta float,
+	ftp float,
+	apg float, -- assists per game
+	rpg float, -- rebounds
+	spg float, -- steals
+	blk float, -- blocks
+	tov float, -- turn overs per game
+	pm float   -- plus minus score
+);
+
+-- Create the PlayoffStats table: --
+create table if not exists
+nba.PlayoffStats (
+	stat_id serial primary key,
+
+	player_id int references nba.Player(player_id),
+	season_id int references nba.Season(season_id),
+	team_id int references nba.Team(team_id),
+	
+	games_played int,
+	minutes_per_game float,
+	ppg float, -- points per game
+	fgm float, -- field goals (fg) made
+	fga float, -- fg attempted
+	fgp float, -- fg percentage (%)
+	tpm float, -- three pointers (tp) made
+	tpa float, -- tp attempted
+	tpp float, -- tp %
+	ftm float, -- free throws (ft)
+	fta float,
+	ftp float,
+	apg float, -- assists per game
+	rpg float, -- rebounds
+	spg float, -- steals
+	blk float, -- blocks
+	tov float, -- turn overs per game
+	pm float   -- plus minus score
+);
