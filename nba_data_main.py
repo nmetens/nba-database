@@ -9,6 +9,7 @@
 # External Modules:
 import os
 import nba_api.stats.static.players as p # Player list
+from nba_api.stats.endpoints import playercareerstats # Player stats
 
 # My modules:
 import database_connection as db
@@ -26,11 +27,11 @@ def main():
     conn = db.create_connection(db_name, db_user, db_password, db_host, db_port) # Returns a connection
     cursor = conn.cursor() # Get the cursor from the connection to execute queries
 
-    players = p.get_players() # Get all the NBA players
+    nba_players = p.get_players() # Get all the NBA players
     active_players = [] # Empty list for active players
 
     # Create list of active players:
-    for player in players:
+    for player in nba_players:
     	if player['is_active'] is True:
     		active_players.append(player)
 
@@ -56,7 +57,14 @@ def main():
     cursor.execute('alter table nba.players add column full_name varchar(30);')
 
     for player in players:
-       cursor.execute(i.insert_into_players(player, active_players)) # execute insert statement
+       # Get the id of a player by full_name:
+       nba_id = i.get_player_id(player, active_players)
+
+       # Get the career stats from the player id and create pandas datafram:
+       nba_player = playercareerstats.PlayerCareerStats(player_id=f'{nba_id}')
+       df = nba_player.get_data_frames()[0]
+
+       cursor.execute(i.insert(df, 'Players')) # execute insert statement
        # Adding the player name in each row corresponding to the player_id:
        cursor.execute(f'UPDATE nba.Players SET full_name=\'{player}\' where player_id = {i.get_player_id(player, active_players)};')
        cursor.execute(f'update nba.Players set ppg=(pts/gp) where player_id={i.get_player_id(player, active_players)};')
