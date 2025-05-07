@@ -1,26 +1,11 @@
 import nba_api.stats.static.players as p # Player list
 from nba_api.stats.endpoints import playercareerstats # Player stats
 import insert as i
+from players import players
 
 def nba_players(cursor):
 	# Insert into the player and team tables:
 	active_players = p.get_active_players() # List for active players
-
-	# Create a list of my favorite NBA players:
-	players = [
-		'Stephen Curry', 
-		'LeBron James', 
-		'Kyrie Irving', 
-		'Kevin Durant', 
-		'Damian Lillard',
-		'Anthony Edwards',
-		'Jayson Tatum',
-		'Jalen Brunson',
-		'Jamal Murray',
-		'Giannis Antetokounmpo',
-		'James Harden',
-		'Klay Thompson'
-	]
 
 	# Add a ppg column for each player:
 	cursor.execute('alter table nba.players add column ppg float;')

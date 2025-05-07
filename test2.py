@@ -13,6 +13,6 @@ steph_info = CommonPlayerInfo(player_id=steph_id)
 df = steph_info.get_data_frames()[0]
 print(df.columns)
 
-TeamGameLog(team_id=...)
+#TeamGameLog(team_id=...)
 
-LeagueGameFinder()
+#LeagueGameFinder()

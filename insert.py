@@ -1,8 +1,6 @@
 import pandas as pd
 import nba_api.stats.static.players as p # Player list
 
-
-#def get_player_id(name: str, active_players: list):
 def get_player_id(name: str):
 	""" Get the player id from the API using the 
 	player's full_name from the active_players list.
