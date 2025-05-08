@@ -11,7 +11,11 @@ players = [
 	'Jamal Murray',
 	'Giannis Antetokounmpo',
 	'James Harden',
-	'Klay Thompson'
+	'Klay Thompson',
+	'Ja Morant',
+	'Jimmy Butler III',
+	'Luka Dončić',
+	'Jaylen Brown'
 ]
 
 

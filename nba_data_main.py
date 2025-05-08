@@ -24,6 +24,7 @@ import nba_teams as nba_t
 import nba_awards as nba_a
 import player_game_log as log
 import common_player_info as info
+import nba_seasons as nba_s
 
 # Main method:
 def main():
@@ -37,34 +38,24 @@ def main():
 	conn = db.create_connection(db_name, db_user, db_password, db_host, db_port) # Returns a connection
 	cursor = conn.cursor() # Get the cursor from the connection to execute queries
 
-	# Generate season IDs from 1996-97 to 2024-25 (ChatGpt)
-	season_ids = []
-	for start_year in range(1996, 2025):
-	    end_year_short = str(start_year + 1)[-2:]  # get last two digits
-	    season_id = f"{start_year}-{end_year_short}"
-	    season_ids.append((season_id, start_year, start_year + 1))
-
-	for season in season_ids:
-		cursor.execute(
-			'insert into nba.Seasons (season_id, start_year, end_year) values (%s, %s, %s);',
-			(season[0], season[1], season[2])
-		)
-
-	# Create the nba.Players table:
-	#nba_p.nba_players(cursor)
+	# Create the nba.Seasons table:
+	#nba_s.nba_seasons(cursor)
 
 	# Create the nba.Teams table:
 	#nba_t.nba_teams(cursor)
 
+	# Create the nba.Players table:
+	#nba_p.nba_players(cursor)
+
 	# Create the nba.Awards table:
 	#nba_a.nba_awards(cursor)
-
-	# Create the nba.PlayerGameLog table:
-	#log.player_game_log(cursor)
 
 	# Create the nba.CommonPlayerInfo table:
 	#info.common_player_info(cursor)	
 	
+	# Create the nba.PlayerGameLog table:
+	log.player_game_log(cursor)
+
 	cursor.close()
 	conn.commit()
 
