@@ -37,24 +37,29 @@ def main():
 
 	conn = db.create_connection(db_name, db_user, db_password, db_host, db_port) # Returns a connection
 	cursor = conn.cursor() # Get the cursor from the connection to execute queries
+	
+	db.query('create_all_tables.sql', cursor)
 
-	# Create the nba.Seasons table:
+	"""
+	6 total tables are created:
+	"""
+	# 1) Create the nba.Seasons table:
 	#nba_s.nba_seasons(cursor)
 
-	# Create the nba.Teams table:
+	# 2) Create the nba.Teams table:
 	#nba_t.nba_teams(cursor)
 
-	# Create the nba.Players table:
+	# 3) Create the nba.Players table:
 	#nba_p.nba_players(cursor)
 
-	# Create the nba.Awards table:
+	# 4) Create the nba.Awards table:
 	#nba_a.nba_awards(cursor)
 
-	# Create the nba.CommonPlayerInfo table:
+	# 5) Create the nba.CommonPlayerInfo table:
 	#info.common_player_info(cursor)	
 	
-	# Create the nba.PlayerGameLog table:
-	log.player_game_log(cursor)
+	# 6) Create the nba.PlayerGameLog table:
+	#log.player_game_log(cursor)
 
 	cursor.close()
 	conn.commit()
