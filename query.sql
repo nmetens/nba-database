@@ -73,3 +73,60 @@ where "PPG" = (
 -- than 15:
 select "Name", "PPG" from  basic_stats
 where "PPG" > 15;
+
+-- View that holds all important player info:
+drop view player_info;
+create view player_info as
+select
+	p.full_name,
+	p.player_age as "Draft Age",
+	i.height,
+	i.weight,
+	i.birthdate,
+	i.jersey,
+	i.position,
+	i.last_affiliation,
+	i.team_name,
+	i.season_exp
+from
+	nba.players as p
+join nba.commonplayerinfo as i
+on
+	p.player_id = i.person_id;
+
+select * from player_info;
+
+select full_name, season_exp from player_info
+where season_exp > 10;
+
+select full_name, season_exp from player_info
+where season_exp < 10;
+
+select full_name, weight, height
+from player_info
+where weight < 200;
+
+-- Calculate player BMI:
+-- feet to m: (1/0.3048)
+-- lbs to kg: (1/0.453592)
+-- BMI = weight (kg) / [height (m)]²
+-- BMI = (weight/0.453592) / sqrt(height/0.453592)
+-- BMI = weight (lb) / height² (in) * 703 
+
+select
+	full_name,
+	weight,
+	height,
+	round(weight / power(height, 2) * 703 ) as "BMI"
+from
+	player_info;
+
+SELECT
+  full_name,
+  weight,
+  height,
+  ROUND(weight / POWER(
+    (SPLIT_PART(height, '-', 1)::INT * 12 + SPLIT_PART(height, '-', 2)::INT), 2
+  ) * 703) AS "BMI" -- ChatGPT generated equation.
+FROM
+  player_info;
