@@ -9,22 +9,10 @@
 # External Modules:
 import os
 import numpy as np
-import nba_api.stats.static.players as p # Player list
-from nba_api.stats.endpoints import playercareerstats # Player stats
-from nba_api.stats.endpoints import TeamDetails # Team data
-from nba_api.stats.endpoints import PlayerAwards
-
-from nba_api.stats.endpoints import PlayerGameLog, CommonPlayerInfo, TeamGameLog, LeagueGameFinder
 
 # My modules:
+import data_manipulation as dm
 import database_connection as db
-import insert as i
-import nba_players as nba_p
-import nba_teams as nba_t
-import nba_awards as nba_a
-import player_game_log as log
-import common_player_info as info
-import nba_seasons as nba_s
 
 # Main method:
 def main():
@@ -38,22 +26,23 @@ def main():
 	conn = db.create_connection(db_name, db_user, db_password, db_host, db_port) # Returns a connection
 	cursor = conn.cursor() # Get the cursor from the connection to execute queries
 	
+	#db.query('drop_all.sql', cursor); print('All tables dropped')
 	#db.query('create_all_tables.sql', cursor); print('All tables created')
 
 	"""
 	6 total tables are created:
 	"""
 	# 1) Create the nba.Seasons table:
-	#nba_s.nba_seasons(cursor); print('NBA.Seasons table populated')
+	#dm.nba_seasons(cursor); print('NBA.Seasons table populated')
 
 	# 2) Create the nba.Teams table: (this one takes the most tries)
-	#nba_t.nba_teams(cursor); print('NBA.Teams table populated')
+	dm.nba_teams(cursor); print('NBA.Teams table populated')
 
 	# 3) Create the nba.Players table:
-	#nba_p.nba_players(cursor); print('NBA.Players table populated')
+	#dm.nba_players(cursor); print('NBA.Players table populated')
 
 	# 4) Create the nba.Awards table:
-	#nba_a.nba_awards(cursor); print('NBA.Awards table populated')
+	#dm.nba_awards(cursor); print('NBA.Awards table populated')
 
 	# 5) Create the nba.CommonPlayerInfo table:
 	#info.common_player_info(cursor); print('NBA.CommonPlayerInfo table populated')
