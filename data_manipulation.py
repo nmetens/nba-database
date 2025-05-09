@@ -4,6 +4,9 @@ from nba_api.stats.static import teams
 from players import players
 import insert as i
 
+import os
+from pathlib import Path
+
 def common_player_info(cursor):
 	for player in players:
 		nba_id = i.get_player_id(player)
@@ -27,13 +30,56 @@ def nba_awards(cursor):
 
 	return cursor
 
-def get_text_data(file: str):
+def get_text_data(file: str) -> list:
+	data = []
 	with open(file, 'r') as data:
 		lines = data.readlines()
 		for line in lines:
-			print(line)
-	
+			data.append(line)	
+	return data
 
+def api_players():
+	"""
+	Putting all the data in the api return into a text file.
+	The API consistently stalls, and manually changing the index
+	is laborous.
+	"""
+	active_players = p.get_active_players() # List for active players
+
+	player_index = 0 # Go from 0 the len of the active_player list (549)
+	# Method 1: Using os.path.exists()
+	player_file = 'player_data.txt'
+	if os.path.exists(player_file):
+		# File exists. Get the last index we left off at before
+		# API crash:
+		with open(player_file, 'r') as file: 
+			lines = file.readlines()
+			if lines:
+				player_index = int(lines[-1].rstrip('\n')) + 1
+				print('left off on index:', player_index)
+			else:
+				player_index = 0
+
+	# Loop through active_players and insert their data into
+	# the player_data.txt:
+		
+	for player in active_players[player_index:]:
+		# Get the id of a player by full_name:
+		player_name = player['full_name']
+		nba_id = i.get_player_id(player_name)
+		print(player_name, 'player_index:', player_index)
+
+		# Get the career stats from the player id and create pandas datafram:
+		nba_player = playercareerstats.PlayerCareerStats(player_id=f'{nba_id}')
+		df = nba_player.get_data_frames()[0]
+
+		# Store all the players we get from the api in data.txt:
+		df.to_json('player_data.txt', mode='a', orient='records', lines=True)
+
+		with open('player_data.txt', 'a') as file:
+			file.write(f'{player_index}\n')
+		player_index += 1
+	
 def nba_players(cursor):
 	# Insert into the player and team tables:
 	active_players = p.get_active_players() # List for active players

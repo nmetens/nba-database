@@ -13,6 +13,7 @@ import numpy as np
 # My modules:
 import data_manipulation as dm
 import database_connection as db
+import insert as i
 
 # Main method:
 def main():
@@ -26,6 +27,14 @@ def main():
 	conn = db.create_connection(db_name, db_user, db_password, db_host, db_port) # Returns a connection
 	cursor = conn.cursor() # Get the cursor from the connection to execute queries
 	
+	"""
+	"""
+	# Testing:
+	print(i.get_player_id('LaMelo Ball'))
+	dm.api_players()
+	"""
+	"""
+
 	#db.query('drop_all.sql', cursor); print('All tables dropped')
 	#db.query('create_all_tables.sql', cursor); print('All tables created')
 
@@ -36,7 +45,7 @@ def main():
 	#dm.nba_seasons(cursor); print('NBA.Seasons table populated')
 
 	# 2) Create the nba.Teams table: (this one takes the most tries)
-	dm.nba_teams(cursor); print('NBA.Teams table populated')
+	#dm.nba_teams(cursor); print('NBA.Teams table populated')
 
 	# 3) Create the nba.Players table:
 	#dm.nba_players(cursor); print('NBA.Players table populated')
