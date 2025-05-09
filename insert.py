@@ -24,11 +24,10 @@ def insert(df, table: str):
 	"""
 	df = df.astype(object)
 	if not df.empty:
-
 		columns = ', '.join(df.columns) # Separates the data by comma
 		placeholders = ', '.join(['%s'] * len(df.columns)) # Creates tuple with '%s' for each column
-		row_list = df.iloc[0].tolist() # Gets all the data from a row in the df and turns it into a list
-		data = tuple(row_list) # Turn list into tuple
+		#row_list = df.iloc[0].tolist() # Gets all the data from a row in the df and turns it into a list
+		data = [tuple(row) for row in df.to_numpy()] # List of row tuples ChatGPT
 
 		insert = ( # create insert statement:
 			f'insert into nba.{table} ({columns}) '

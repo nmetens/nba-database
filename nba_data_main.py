@@ -44,19 +44,19 @@ def main():
 	#dm.nba_seasons(cursor); print('NBA.Seasons table populated')
 
 	# 2) Create the nba.Teams table: (this one takes the most tries)
-	#dm.nba_teams(cursor); print('NBA.Teams table populated')
+	#cursor, conn = dm.nba_teams(cursor, conn); print('NBA.Teams table populated')
 
-	# 3) Create the nba.Players table:
-	cursor, conn = dm.nba_players(cursor, conn); print('NBA.Players table populated')
+	# 3) Create the nba.PlayerInfo table:
+	#cursor, conn = dm.nba_players(cursor, conn); print('NBA.Players table populated')
 
 	# 4) Create the nba.Awards table:
-	#dm.nba_awards(cursor); print('NBA.Awards table populated')
+	#cursor, conn = dm.nba_awards(cursor, conn); print('NBA.Awards table populated')
 
-	# 5) Create the nba.CommonPlayerInfo table:
-	#info.common_player_info(cursor); print('NBA.CommonPlayerInfo table populated')
+	# 5) Create the nba.PlayersStats table:
+	#cursor, conn = dm.player_stats(cursor, conn); print('NBA.PlayersStats table populated')
 	
 	# 6) Create the nba.PlayerGameLog table:
-	#log.player_game_log(cursor); print('NBA.PlayerGameLog table populated')
+	cursor, conn = dm.player_game_log(cursor, conn); print('NBA.PlayerGameLog table populated')
 
 	cursor.close()
 	conn.commit()

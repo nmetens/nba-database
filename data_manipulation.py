@@ -10,28 +10,42 @@ import json
 import os
 from pathlib import Path
 
-def common_player_info(cursor):
-	for player in players:
-		nba_id = i.get_player_id(player)
-		player_info = CommonPlayerInfo(player_id=nba_id)
-		df = player_info.get_data_frames()[0]
-		insert_stmt, data = i.insert(df, 'CommonPlayerInfo')
-		cursor.execute(insert_stmt, data)
-	return cursor
+def player_stats(cursor, conn):
+	index = 16 # update the index when stall occurs
+	for player in players[index:]:
+		player_id = i.get_player_id(player)
+		player_stats = playercareerstats.PlayerCareerStats(player_id=player_id)
+		df = player_stats.get_data_frames()[0]
 
-def nba_awards(cursor):
-	cursor.execute('select player_id from nba.Players;')
+		df = df[df['TEAM_ID'] != 0]  # Option 1: Drop the rows of team_id == 0
+
+		insert_stmt, data = i.insert(df, 'PlayersStats')
+		cursor.executemany(insert_stmt, data)
+		print(player_id, "index:", index)
+
+		conn.commit()
+
+		index += 1
+	return cursor, conn
+
+def nba_awards(cursor, conn):
+	cursor.execute('select person_id from nba.PlayerInfo;')
 	nba_player_ids = cursor.fetchall()
 	print(nba_player_ids)
 
-	for p_id in nba_player_ids:
+	index = 25 # update when stalls
+	for p_id in nba_player_ids[index:]:
 		award = PlayerAwards(player_id=p_id)
 		df = award.get_data_frames()[0]
+		print(df, 'player_index:', index)
+		df = df.replace([r'^\s*$', r'(?i)\(null\)', r'(?i)null'], None, regex=True)# Replace empty strings with None ChatGPT
 
 		insert_stmt, data = i.insert(df, 'Awards')
-		cursor.execute(insert_stmt, data)
+		cursor.executemany(insert_stmt, data)
+		conn.commit()
+		index += 1
 
-	return cursor
+	return cursor, conn
 
 def get_text_data(file: str) -> list:
 	player_data = []
@@ -45,13 +59,13 @@ def clean_data(file: str) -> list:
 	data = get_text_data(file)
 	cleaned_lines = [line.strip() for line in data if line.strip() and not line.strip().isdigit()]
 	return cleaned_lines
-
+"""
 def api_players():
-	"""
+	"
 	Putting all the data in the api return into a text file.
 	The API consistently stalls, and manually changing the index
 	is laborous.
-	"""
+	"
 	active_players = p.get_active_players() # List for active players
 
 	player_index = 0 # Go from 0 the len of the active_player list (549)
@@ -87,46 +101,33 @@ def api_players():
 		with open('player_data.txt', 'a') as file:
 			file.write(f'{player_index}\n')
 		player_index += 1
+"""
 	
 def list_to_df(json_lines: list) -> pd.DataFrame:
 	data_dicts = [json.loads(line) for line in json_lines]
 	return pd.DataFrame(data_dicts)
 
 def nba_players(cursor, conn):
-	data = clean_data('player_data.txt')
-	df = list_to_df(data)
-
-
-	# Add a ppg column for each player:
-	cursor.execute('alter table nba.players add column ppg float;')
-	# Add a full_name column for the player name:
-	cursor.execute('alter table nba.players add column full_name varchar(30);')
-
-	id_list = []
-
-	for index, row in df.iterrows():
-		player_id = row['PLAYER_ID']
+	
+	index = 19 # change if stall occures
+	for player_name in players[index:]:
+		player_id = i.get_player_id(player_name)
+		player_info = CommonPlayerInfo(player_id=player_id)
 		print(player_id)
+		
+		# Get the player info the player id and create pandas datafram:
+		df = player_info.get_data_frames()[0] # Get all the player data for their career in a dataframe
 
-		if player_id not in id_list:
-			id_list.append(player_id)
+		print(df, 'index:', index)
 
-			player_name = i.get_player_name(player_id)
+		insert_stmt, data = i.insert(df, 'PlayerInfo')
 
-			current_row = pd.DataFrame([row])
-			insert_stmt, data = i.insert(current_row, 'Players')
+		if insert_stmt and data:
+			cursor.executemany(insert_stmt, data) # Many executes since there are multiple rows
+		
+		conn.commit() # Commit the insert after each player
 
-			if insert_stmt and data:
-				cursor.execute(insert_stmt, data)
-				cursor.execute(
-					'UPDATE nba.Players SET full_name=%s where player_id = %s;',
-					(player_name, player_id)
-				)
-				cursor.execute(
-					'update nba.Players set ppg=pts/NULLIF(gp, 0) where player_id=%s;',
-					(player_id,)
-				)
-		conn.commit()
+		index += 1
 
 	return cursor, conn
 
@@ -143,7 +144,7 @@ def nba_seasons(cursor):
 
 	return cursor
 
-def nba_teams(cursor):
+def nba_teams(cursor, conn):
 	# Get all NBA teams
 	nba_teams = teams.get_teams()
 
@@ -157,14 +158,13 @@ def nba_teams(cursor):
 		print(team_df, 'index:', index)
 
 		insert_stmt, data = i.insert(team_df, 'Teams')
-		cursor.execute(insert_stmt, data)
+		if insert_stmt and data:
+			cursor.executemany(insert_stmt, data)
 		index += 1
-		
-		# Store all the teams we get from the api in team_data.txt,
-		# since the api times out on most occasions:
-		team_df.to_json('team_data.txt', mode='a', orient='records', lines=True)
 
-	return cursor
+		conn.commit()
+		
+	return cursor, conn
 
 def convert_season_id(season_id: str) -> str:
 	""" 
@@ -185,13 +185,13 @@ def revert_season_id(season_id: str) -> str:
 	end_year = str(int(szn_id[2:]) + 1) # 24 + 1 = 25
 	return szn_id + '-' + end_year # 2024-25
 
-def player_game_log(cursor):
-	active_players = p.get_active_players() # List for active players
-	for player in active_players:	
-		nba_id = i.get_player_id(player)
+def player_game_log(cursor, conn):
+	index = 29 # update after stall
+	for player in players[index:]:	
+		player_id = i.get_player_id(player)
 
 		season_id = '2024-25'
-		gamelog = PlayerGameLog(player_id=nba_id, season=season_id)
+		gamelog = PlayerGameLog(player_id=player_id, season=season_id)
 		df = gamelog.get_data_frames()[0]
 
 		# Replace 'SEASON_ID' in the dataframe to match your DB format
@@ -199,14 +199,9 @@ def player_game_log(cursor):
 		df['SEASON_ID'] = df['SEASON_ID'].apply(revert_season_id)
 		
 		insert_stmt, data = i.insert(df, 'PlayerGameLogs')
-		cursor.execute(insert_stmt, data)
+		cursor.executemany(insert_stmt, data)
+		print(df, "index:", index)
+		conn.commit()
+		index += 1
 
-	return cursor
-
-def player_game_log(cursor):
-	
-	active_players = p.get_active_players() # List for active players
-	for player in active_players:	
-		nba_id = i.get_player_id(player)
-		gamelog = PlayerGameLog(player_id=nba_id, season='2024-25')
-		df = gamelog.get_data_frames()[0]
+	return cursor, conn

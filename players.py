@@ -15,7 +15,22 @@ players = [
 	'Ja Morant',
 	'Jimmy Butler III',
 	'Luka Dončić',
-	'Jaylen Brown'
+	'Jaylen Brown',
+	'Donovan Mitchell',
+	'Kawhi Leonard',
+	'Tyler Herro',
+	'Russell Westbrook',
+	'Trae Young',
+	'Cade Cunningham',
+	'Shai Gilgeous-Alexander',
+	'Nikola Jokić',
+	'Paolo Banchero',
+	'LaMelo Ball',
+	'Anthony Davis',
+	'Karl-Anthony Towns',
+	'De\'Aaron Fox',
+	'DeMar DeRozan',
+	'Jordan Poole',
+	'Coby White',
+	'Tyrese Haliburton'
 ]
-
-
