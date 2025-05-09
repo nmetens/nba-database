@@ -30,8 +30,7 @@ def main():
 	"""
 	"""
 	# Testing:
-	print(i.get_player_id('LaMelo Ball'))
-	dm.api_players()
+	#dm.api_players()
 	"""
 	"""
 
@@ -48,7 +47,7 @@ def main():
 	#dm.nba_teams(cursor); print('NBA.Teams table populated')
 
 	# 3) Create the nba.Players table:
-	#dm.nba_players(cursor); print('NBA.Players table populated')
+	cursor, conn = dm.nba_players(cursor, conn); print('NBA.Players table populated')
 
 	# 4) Create the nba.Awards table:
 	#dm.nba_awards(cursor); print('NBA.Awards table populated')

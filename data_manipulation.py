@@ -4,6 +4,9 @@ from nba_api.stats.static import teams
 from players import players
 import insert as i
 
+import pandas as pd
+import json
+
 import os
 from pathlib import Path
 
@@ -31,12 +34,17 @@ def nba_awards(cursor):
 	return cursor
 
 def get_text_data(file: str) -> list:
-	data = []
+	player_data = []
 	with open(file, 'r') as data:
 		lines = data.readlines()
 		for line in lines:
-			data.append(line)	
-	return data
+			player_data.append(line)	
+	return player_data 
+
+def clean_data(file: str) -> list:
+	data = get_text_data(file)
+	cleaned_lines = [line.strip() for line in data if line.strip() and not line.strip().isdigit()]
+	return cleaned_lines
 
 def api_players():
 	"""
@@ -80,47 +88,47 @@ def api_players():
 			file.write(f'{player_index}\n')
 		player_index += 1
 	
-def nba_players(cursor):
-	# Insert into the player and team tables:
-	active_players = p.get_active_players() # List for active players
+def list_to_df(json_lines: list) -> pd.DataFrame:
+	data_dicts = [json.loads(line) for line in json_lines]
+	return pd.DataFrame(data_dicts)
+
+def nba_players(cursor, conn):
+	data = clean_data('player_data.txt')
+	df = list_to_df(data)
+
 
 	# Add a ppg column for each player:
-	#cursor.execute('alter table nba.players add column ppg float;')
+	cursor.execute('alter table nba.players add column ppg float;')
 	# Add a full_name column for the player name:
-	#cursor.execute('alter table nba.players add column full_name varchar(30);')
+	cursor.execute('alter table nba.players add column full_name varchar(30);')
 
-	# Loop through all my favorite players and insert their first season into
-	# the nba.Players table in the database:
-	#for player in players:
-	index = 549
-	for player in active_players[index:]:
-		# Get the id of a player by full_name:
-		player_name = player['full_name']
-		nba_id = i.get_player_id(player_name)
-		print(player_name, 'index:', index)
+	id_list = []
 
-		#if nba_id is not None:
-		# Get the career stats from the player id and create pandas datafram:
-		nba_player = playercareerstats.PlayerCareerStats(player_id=f'{nba_id}')
-		df = nba_player.get_data_frames()[0]
+	for index, row in df.iterrows():
+		player_id = row['PLAYER_ID']
+		print(player_id)
 
-		insert_stmt, data = i.insert(df, 'Players')
+		if player_id not in id_list:
+			id_list.append(player_id)
 
-		if insert_stmt is not None and data is not None:
-			cursor.execute(insert_stmt, data)
-			# Adding the player name in each row corresponding to the player_id:
-			cursor.execute(
-				'UPDATE nba.Players SET full_name=%s where player_id = %s;',
-				(player_name, i.get_player_id(player_name))
-			)
-			cursor.execute(f'update nba.Players set ppg=(pts/gp) where player_id={i.get_player_id(player_name)};')
+			player_name = i.get_player_name(player_id)
 
-		# Store all the players we get from the api in data.txt:
-		df.to_json('data.txt', mode='a', orient='records', lines=True)
+			current_row = pd.DataFrame([row])
+			insert_stmt, data = i.insert(current_row, 'Players')
 
-		index += 1
+			if insert_stmt and data:
+				cursor.execute(insert_stmt, data)
+				cursor.execute(
+					'UPDATE nba.Players SET full_name=%s where player_id = %s;',
+					(player_name, player_id)
+				)
+				cursor.execute(
+					'update nba.Players set ppg=pts/NULLIF(gp, 0) where player_id=%s;',
+					(player_id,)
+				)
+		conn.commit()
 
-	return cursor
+	return cursor, conn
 
 def nba_seasons(cursor):
 	# Generate season IDs from 1996-97 to 2024-25 (ChatGpt)

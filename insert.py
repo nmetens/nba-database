@@ -1,5 +1,6 @@
 import pandas as pd
 import nba_api.stats.static.players as p # Player list
+from nba_api.stats.endpoints import commonplayerinfo
 
 def get_player_id(name: str):
 	""" Get the player id from the API using the 
@@ -10,6 +11,11 @@ def get_player_id(name: str):
 		if player['full_name'] == name:
 			return player['id']
 	return None
+
+def get_player_name(player_id: int) -> str:
+	player_info = commonplayerinfo.CommonPlayerInfo(player_id=player_id)
+	player_name = player_info.get_data_frames()[0].loc[0, 'DISPLAY_FIRST_LAST']
+	return player_name
 
 def insert(df, table: str):
 	""" Given a pandas df and a tablename,
