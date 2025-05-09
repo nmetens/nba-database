@@ -27,13 +27,6 @@ def main():
 	conn = db.create_connection(db_name, db_user, db_password, db_host, db_port) # Returns a connection
 	cursor = conn.cursor() # Get the cursor from the connection to execute queries
 	
-	"""
-	"""
-	# Testing:
-	#dm.api_players()
-	"""
-	"""
-
 	#db.query('drop_all.sql', cursor); print('All tables dropped')
 	#db.query('create_all_tables.sql', cursor); print('All tables created')
 
@@ -56,7 +49,7 @@ def main():
 	#cursor, conn = dm.player_stats(cursor, conn); print('NBA.PlayersStats table populated')
 	
 	# 6) Create the nba.PlayerGameLog table:
-	cursor, conn = dm.player_game_log(cursor, conn); print('NBA.PlayerGameLog table populated')
+	#cursor, conn = dm.player_game_log(cursor, conn); print('NBA.PlayerGameLog table populated')
 
 	cursor.close()
 	conn.commit()

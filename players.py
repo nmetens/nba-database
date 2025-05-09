@@ -1,3 +1,10 @@
+""" Author: Nathan Metens
+
+	* This file holds the array of NBA player names
+	* whom I am most interested in in no particular
+	* order.
+"""
+
 # Create a list of my favorite NBA players:
 players = [
 	'Stephen Curry', 

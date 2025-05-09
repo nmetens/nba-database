@@ -1,9 +1,19 @@
+""" Author: Nathan Metens
+
+	* This file has the methods to get the player
+	* id, or name, as well as to insert the df
+	* rows into the database directly.
+	* This module is heavily used by all methods
+	* in the data_manipulation module.
+"""
+
 import pandas as pd
 import nba_api.stats.static.players as p # Player list
 from nba_api.stats.endpoints import commonplayerinfo
 
 def get_player_id(name: str):
-	""" Get the player id from the API using the 
+	""" 
+	Get the player id from the API using the 
 	player's full_name from the active_players list.
 	"""
 	active_players = p.get_active_players() # Get all the NBA players
@@ -13,6 +23,9 @@ def get_player_id(name: str):
 	return None
 
 def get_player_name(player_id: int) -> str:
+	"""
+	Get the player name from the api given the player_id.
+	"""
 	player_info = commonplayerinfo.CommonPlayerInfo(player_id=player_id)
 	player_name = player_info.get_data_frames()[0].loc[0, 'DISPLAY_FIRST_LAST']
 	return player_name
