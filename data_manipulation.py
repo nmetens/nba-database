@@ -167,28 +167,48 @@ def revert_season_id(season_id: str) -> str:
 	end_year = str(int(szn_id[2:]) + 1) # 24 + 1 = 25
 	return szn_id + '-' + end_year # 2024-25
 
+seasons = [
+	'2009-10',
+	'2010-11',
+	'2011-12',
+	'2012-13',
+	'2013-14',
+	'2014-15'	
+
+"""	'2015-16',
+	'2016-17',
+	'2018-19',
+	'2019-20'"""
+]
+
 def player_game_log(cursor, conn):
 	"""
 	Loop through the players list and call the api
 	to get that player's games data for the 2024-25 season.
 	"""
-	index = 29 # Update after stall.
-	for player in players[index:]:	
-		player_id = i.get_player_id(player)
+	
+	szn_idx = 5 
+	index = 1 # Update after stall.
+	for season_id in seasons[szn_idx:]:
+		print('season:', szn_idx)
+		for player in players[index:]:
+			player_id = i.get_player_id(player)
 
-		season_id = '2024-25'
-		gamelog = PlayerGameLog(player_id=player_id, season=season_id)
-		df = gamelog.get_data_frames()[0]
+			#season_id = '2024-25'
+			gamelog = PlayerGameLog(player_id=player_id, season=season_id)
+			
+			df = gamelog.get_data_frames()[0]
 
-		# Replace 'SEASON_ID' in the dataframe to match your DB format
-		# All season_id's in the df are '22024'. Revert to '2024-25':
-		df['SEASON_ID'] = df['SEASON_ID'].apply(revert_season_id)
-		
-		insert_stmt, data = i.insert(df, 'PlayerGameLogs')
-		cursor.executemany(insert_stmt, data)
-		print(df, "index:", index)
+			# Replace 'SEASON_ID' in the dataframe to match your DB format
+			# All season_id's in the df are '22024'. Revert to '2024-25':
+			df['SEASON_ID'] = df['SEASON_ID'].apply(revert_season_id)
+			
+			insert_stmt, data = i.insert(df, 'PlayerGameLogs')
+			if insert_stmt is not None and data is not None:
+				cursor.executemany(insert_stmt, data)
+				print(df, "player_index:", index)
 
-		conn.commit()
-		index += 1
+				conn.commit()
+			index += 1
 
 	return cursor, conn

@@ -49,7 +49,7 @@ def main():
 	#cursor, conn = dm.player_stats(cursor, conn); print('NBA.PlayersStats table populated')
 	
 	# 6) Create the nba.PlayerGameLog table:
-	#cursor, conn = dm.player_game_log(cursor, conn); print('NBA.PlayerGameLog table populated')
+	cursor, conn = dm.player_game_log(cursor, conn); print('NBA.PlayerGameLog table populated')
 
 	cursor.close()
 	conn.commit()
