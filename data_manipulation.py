@@ -168,13 +168,16 @@ def revert_season_id(season_id: str) -> str:
 	return szn_id + '-' + end_year # 2024-25
 
 seasons = [
-	'2009-10',
+	"""'2020-21',
+	'2021-22',
+	'2023-24',
+	'2022-23',
+	'2009-10',"""
 	'2010-11',
 	'2011-12',
-	'2012-13',
-	'2013-14',
-	'2014-15'	
-
+	'2017-18',
+	'2012-13'
+	"""'2014-15'"""
 """	'2015-16',
 	'2016-17',
 	'2018-19',
@@ -187,8 +190,8 @@ def player_game_log(cursor, conn):
 	to get that player's games data for the 2024-25 season.
 	"""
 	
-	szn_idx = 5 
-	index = 1 # Update after stall.
+	szn_idx = 2 
+	index = 0 # Update after stall.
 	for season_id in seasons[szn_idx:]:
 		print('season:', szn_idx)
 		for player in players[index:]:
