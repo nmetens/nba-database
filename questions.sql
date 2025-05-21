@@ -42,8 +42,62 @@ on s.team_id = t.team_id
 where p.first_name = 'LeBron'
 group by season_id, s.full_name, t.abbreviation;
 
--- How many 50-40-90 seasons did Steph Curry have? Steve Kerr? Steve Nash?
--- Who are the top 5 scorers in NBA history, ranked from most to least points?
+-- Who had 50-40-90 seasons? Kevin Durant? Klay Thompson?
+-- Changed to query active players instead of players who played in 
+-- the era when the nba_api didn't have the data:
+select s.season_id as "Season", s.player_age, t.abbreviation as "Team", s.full_name, s.ppg, s.fg_pct, s.fg3_pct, s.ft_pct  
+from nba.playersstats s
+join nba.teams t 
+on s.team_abbreviation = t.abbreviation
+where s.fg_pct >= 0.5 and s.fg3_pct >= 0.4 and s.ft_pct >= 0.9;
+
+-- Who are the top 5 scorers in RECENT NBA history, ranked from most to least points?
+-- Changed to the top 5 scorers in the data in the database instead of all of
+-- nba history:
+select distinct(p2.full_name), l.game_date, l.matchup, l.wl, l.min, l.reb, l.stl, l.ast, l.pts
+from nba.playergamelogs l
+join nba.playerinfo p 
+on l.player_id = p.person_id
+left join nba.playersstats p2 
+on p.person_id = p2.player_id
+order by pts desc
+limit 5;
+
+select l.player_id, p2.full_name, l.game_date, l.matchup, l.wl, l.min, l.reb, l.stl, l.ast, l.pts
+from nba.playergamelogs l
+join nba.playerinfo p 
+  on l.player_id = p.person_id
+left join nba.playersstats p2 
+  on p.person_id = p2.player_id
+where (l.player_id, l.pts) in (
+    select player_id, max(pts)
+    from nba.playergamelogs
+    group by player_id
+)
+order by l.pts desc
+limit 5;
+
+create view points as
+select l.player_id, p2.full_name, l.game_date, l.pts
+from nba.playergamelogs l
+join nba.playerinfo p 
+on l.player_id = p.person_id
+join nba.playersstats p2 
+on p.person_id = p2.player_id;
+
+select * from points;
+
+from nba.playersstats p 
+left join nba.playergamelogs l
+on l.player_id = l.player_id
+order by l.pts desc;
+
+select * 
+from nba.playergamelogs p
+join nba.playerinfo p2 
+on p.player_id = p2.person_id
+order by pts desc;
+
 -- What is the order of players who have the most championships?
 -- How many seasons did Steph Curry score more than 25 points per game?
 -- How many 50+ point games does Michael Jordan have in his career compared to LeBron James and Kobe Bryant?
