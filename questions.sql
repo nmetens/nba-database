@@ -1,4 +1,3 @@
-
 ------------------------------
 --NBA DATABASE
 ------------------------------
@@ -14,17 +13,6 @@ select * from nba.playersstats p;
 select * from nba.seasons s;
 select * from nba.teams t;
 ------------------------------
--- Extra 2) How many points per game did Lebron James score in the 2010-11 season?
--- Changed question because the api has no data for the 2003 nba season
--- which was LeBron James's rookie season.
-select s.season_id, full_name, player_age, gp, fgm, fga, ppg
-from nba.seasons s 
-join nba.playersstats p 
-on s.season_id = p.season_id
-join nba.playerinfo as i
-on p.player_id = i.person_id
-where s.season_id = '2010-11' and full_name = 'LeBron James';
-
 -- 1) What was the average free-throw percentage of each player in the database in 2021?
 select s.start_year, p.full_name, p.fta, p.ftm, p.ft_pct 
 from nba.seasons s
@@ -32,53 +20,6 @@ join nba.playersstats p
 on s.season_id = p.season_id
 where s.season_id = '2021-22'
 order by p.ft_pct desc;
-
--- Extra 1) How long has LeBron James been in the NBA?
-create view total_seasons as
-select
-	count(*) as total_seasons
-from
-	nba.playersstats p
-where full_name = 'LeBron James';
-
-select * from total_seasons;
-
--- How many minutes has he played?
-select
-	sum(min) as total_seasons
-from
-	nba.playersstats p
-where full_name = 'LeBron James';
-
--- How many total points?
-create view total_points as
-select
-	sum(pts) as total_points
-from
-	nba.playersstats p
-where full_name = 'LeBron James';
-
-select * from total_points;
-
--- What is is career ppg?
-create view career_ppg as
-select
-	round(avg(ppg), 2) as total_seasons
-from
-	nba.playersstats p
-where full_name = 'LeBron James';
-
-select * from career_ppg;
-
--- Calculate the total points given the total seasons and the avg career ppg:
-create view total_points_calc as
-select
-	round(avg(ppg) * sum(gp), 2) as total_points
-from
-	nba.playersstats p
-where full_name = 'LeBron James';
-
-select * from total_points_calc;
 
 -- 2) What year was Steph Curry's highest scoring season?
 select first_name || ' ' || last_name as full_name, s.season_id, gp, ppg 
@@ -353,16 +294,92 @@ order by teams desc
 limit 10;
 
 -- 14) Who are the players who won the finals MVP, and what were their stats in the finals?
+-- I have no data regarding the nba playoffs besides brackets from the api.
+-- Question changed: 
 
+-- How many points per game did Lebron James score in the 2010-11 season?
+-- Changed question because the api has no data for the 2003 nba season
+-- which was LeBron James's rookie season.
+select s.season_id, full_name, player_age, gp, fgm, fga, ppg
+from nba.seasons s 
+join nba.playersstats p 
+on s.season_id = p.season_id
+join nba.playerinfo as i
+on p.player_id = i.person_id
+where s.season_id = '2010-11' and full_name = 'LeBron James';
 
--- 15) On average, how many seasons does it take for a player to win a championship?
+-- 15a) On average, how many seasons does it take for a player to win a championship?
+drop view if exists seasons_to_champ;
+create view seasons_to_champ as
+select distinct on (full_name)
+	s.season_id, full_name, team, description, min(player_age) age, s.end_year, draft_year, ppg 
+from nba.awards a
+join nba.playersstats p 
+on a.person_id = p.player_id and a.season = p.season_id
+join nba.playerinfo p2 
+on p.player_id = p2.person_id
+join nba.seasons s 
+on p.season_id = s.season_id
+where description = 'NBA Champion'
+group by full_name, s.season_id, full_name, team, description, end_year, draft_year, ppg;
 
--- 16) What is the average age of a regular-season MVP, and what were their stats?
-select * from 
+select * from seasons_to_champ;
 
--- 17) What is the worst regular season record, and what were the stats for that team?
+select round(avg(end_year - draft_year), 0) as average_seasons_before_champ
+from seasons_to_champ;
 
--- 18) What was the best regular season record, and what were the stats?
+-- 15b) What is the average age of a player when they win a championship?
+select round(sum(age)::numeric / count(*)::numeric, 0) from seasons_to_champ;
+
+-- 16)
+-- Extra 1) How long has LeBron James been in the NBA?
+create view total_seasons as
+select
+	count(*) as total_seasons
+from
+	nba.playersstats p
+where full_name = 'LeBron James';
+
+select * from total_seasons;
+
+-- How many minutes has he played?
+select
+	sum(min) as total_seasons
+from
+	nba.playersstats p
+where full_name = 'LeBron James';
+
+-- How many total points?
+create view total_points as
+select
+	sum(pts) as total_points
+from
+	nba.playersstats p
+where full_name = 'LeBron James';
+
+select * from total_points;
+
+-- What is is career ppg?
+create view career_ppg as
+select
+	round(avg(ppg), 2) as total_seasons
+from
+	nba.playersstats p
+where full_name = 'LeBron James';
+
+select * from career_ppg;
+
+-- Calculate the total points given the total seasons and the avg career ppg:
+create view total_points_calc as
+select
+	round(avg(ppg) * sum(gp), 2) as total_points
+from
+	nba.playersstats p
+where full_name = 'LeBron James';
+
+select * from total_points_calc;
+
+-- 17a) What was the best regular season record, and what were the stats?
 create view season_stats as
 select season_id, first_name || ' ' || last_name as player, game_date, matchup, wl, pts 
 from nba.playergamelogs l
@@ -400,6 +417,50 @@ where
 	from
 		regular_season_record rsr2
 );
+
+-- 17b) What is the worst regular season record, and what were the stats for that team?
+select -- This is the season that steph curry got injured.
+	season_id,
+	player,
+	wins,
+	losses,
+	total_games,
+	win_percentage
+from
+	regular_season_record rsr
+where
+	wins = (
+	select
+		min(wins)
+	from
+		regular_season_record rsr2
+);
+
+-- 18) Which team has the most MVPS? And who is the head Coach?
+create view total_mvps as
+select distinct p.season_id, abbreviation, headcoach, full_name, draft_round, draft_number, gp, ppg, description,
+	SUM(CASE WHEN wl = 'W' THEN 1 ELSE 0 END) AS wins,
+    SUM(CASE WHEN wl = 'L' THEN 1 ELSE 0 END) AS losses,
+    ROUND(SUM(CASE WHEN wl = 'W' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS win_percentage
+from nba.teams t 
+join nba.playersstats p 
+on t.team_id = p.team_id and t.abbreviation = p.team_abbreviation
+join nba.playerinfo p2 
+on p.player_id = p2.person_id
+join nba.awards a 
+on p2.person_id = a.person_id and a.season = p.season_id
+join nba.playergamelogs p3 
+on p2.person_id = p3.player_id and a.season = p3.season_id
+where description = 'NBA Most Valuable Player'
+group by p.season_id, abbreviation, headcoach, full_name, draft_round, draft_number, gp, ppg, description;
+
+select * from total_mvps;
+
+select distinct abbreviation, headcoach, count(*) as total_mvps 
+from total_mvps
+group by abbreviation, headcoach
+order by total_mvps desc
+limit 1;
 
 -- 19) How many more 30 PPG seasons does Michael Jordan have over LeBron James?
 -- Changed from Michael Jordan to James Harden...
@@ -554,3 +615,101 @@ group by
 	description,
 	s.ppg,
 	s.player_age;
+
+-- Extra 1) Which coach has the highest winning percentage in 2024?
+drop view if exists wins;
+
+create view wins as
+select
+	headcoach,
+	abbreviation,
+	SUM(case when wl = 'W' then 1 else 0 end) as wins,
+	SUM(case when wl = 'L' then 1 else 0 end) as losses,
+	ROUND(SUM(case when wl = 'W' then 1 else 0 end) * 100.0 / COUNT(*), 2) as win_percentage
+from
+	nba.playergamelogs p
+join nba.seasons s 
+on
+	p.season_id = s.season_id
+join nba.playersstats p2 
+on
+	s.season_id = p2.season_id
+	and p.player_id = p2.player_id
+join nba.playerinfo p3 
+on
+	p2.player_id = p3.person_id
+join nba.teams t 
+on
+	p3.team_id = t.team_id
+where
+	p.season_id = '2024-25'
+group by
+	headcoach,
+	abbreviation
+order by
+	win_percentage desc
+limit 1;
+
+select headcoach from wins;
+
+-- Extra 2) What is the 2023-24 mvps home ppg vs away ppg?
+drop view if exists mvp2023_24;
+create view mvp2023_24 as
+select
+	person_id as player_id
+from
+	nba.awards a
+where
+	season = '2023-24'
+	and description = 'NBA Most Valuable Player';
+
+select * from mvp2023_24;
+
+create view home_vs_away as
+select
+	game_date,
+	full_name,
+	matchup,
+	wl,
+	p3.pts,
+	CASE
+	    WHEN matchup ILIKE '%@%' THEN 'Away'
+	    WHEN matchup ILIKE '%vs.%' THEN 'Home'
+	    ELSE 'Unknown'
+  	END AS location
+from
+	nba.playerinfo p
+join nba.playersstats p2 
+on
+	p.person_id = p2.player_id
+join nba.seasons s 
+on
+	p2.season_id = s.season_id
+join nba.playergamelogs p3 
+on
+	p.person_id = p3.player_id
+	and p2.season_id = p3.season_id
+where
+	p2.player_id = (
+	select
+		*
+	from
+		mvp2023_24)
+	and p2.season_id = '2023-24';
+
+select * from home_vs_away;
+
+create view home_vs_away_pts as
+select 
+	count(case when location = 'Away' then 1 end) as away_games,
+	sum(case when location = 'Away' then pts end) as away_pts,
+	count(case when location = 'Home' then 1 end) as home_games,
+	sum(case when location = 'Home' then pts end) as home_pts
+from home_vs_away;
+
+select * from home_vs_away_pts;
+
+select 
+	round(away_pts/away_games::numeric, 2) as away_ppg,
+	round(home_pts/home_games::numeric, 2) as home_ppg
+from home_vs_away_pts;
