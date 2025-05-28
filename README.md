@@ -18,7 +18,7 @@ trophies they have. I sometimes check the 3-point and free-throw percentage. I l
 good performances because they make my heart beat faster. Creating a database with my favorite players 
 and data will give me lots of practice and easily accessible information I can update and reference in the future.
 
-## 20 Questions answered by the database
+## 23 Questions answered by the database
 
 1) What is the average free-throw percentage of each player in the database in 2021?
 2) What year was Steph Curry's highest scoring season?
@@ -37,22 +37,21 @@ and data will give me lots of practice and easily accessible information I can u
 12) Who was the oldest player to win the MVP award?
 13) How many NBA players played for 5 or more teams in their careers? What were the teams?
 14) How many points per game did Lebron James score in the 2010-11 season?
-15a) On average, how many seasons does it take for a player to win a championship?
-15b) What is the average age of a player when they win a championship?
-16)
-	- How long has LeBron James been in the NBA?
+15) On average, how many seasons does it take for a player to win a championship?
+15) What is the average age of a player when they win a championship?
+16) How long has LeBron James been in the NBA?
 	- How many minutes has he played?
 	- How many total points?
 	- What is is career ppg?
 	- Calculate the total points given the total seasons and the avg career ppg.
-17a) What was the best regular season record, and what were the stats?
-17b) What is the worst regular season record, and what were the stats for that team?
-18) Which team has the most MVPS? And who is the head Coach?
-19) How many more 30 PPG seasons does James Harden have over Stephen Curry?
-20) What was the season with the lowest PPG and still won MVP? What about the highes?
+17) What was the best regular season record, and what were the stats?
+18) What is the worst regular season record, and what were the stats for that team?
+19) Which team has the most MVPS? And who is the head Coach?
+20) How many more 30 PPG seasons does James Harden have over Stephen Curry?
+21) What was the season with the lowest PPG and still won MVP? What about the highes?
 	- And what was the record, and age of the player?
-Extra) Which coach has the highest winning percentage in 2024-25?
-Extra) What is the 2023-24 mvps home ppg vs away ppg?
+22) Which coach has the highest winning percentage in 2024-25?
+23) What is the 2023-24 mvps home ppg vs away ppg?
 
 ## Updates
 
@@ -61,7 +60,8 @@ up query execution. And I put all of my observations and answers to the question
 [Deliverable 3 PDF](https://github.com/nmetens/nba-database/blob/main/Deliverable%203%20Questions%20to%20Queries%20on%20the%20NBA%20Database.pdf). I used the nba_api to extract rows of data from my favorite players, 
 added them to tables through Python functions I created, and then performed many queries 
 that joined multiple tables in order to answer each question. Some questions needed to change
-because the nba_api doesn't have any data before the 2008-09 NBA season. 
+because the nba_api doesn't have any data before the 2008-09 NBA season. I also had so much fun
+that I added some extra questions because I was curious about the results.
 
 ## Conclusion
 
