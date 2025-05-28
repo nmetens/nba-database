@@ -18,41 +18,65 @@ trophies they have. I sometimes check the 3-point and free-throw percentage. I l
 good performances because they make my heart beat faster. Creating a database with my favorite players 
 and data will give me lots of practice and easily accessible information I can update and reference in the future.
 
-## 20 Questions to be ansered by the database
+## 20 Questions answered by the database
 
-1) How many points per game did Lebron James score in his rookie season?
-2) What was the average free-throw percentage of each player in the database in 2021?
-3) How long has LeBron James been in the NBA?
-4) What year was Steph Curry's highest scoring season?
-5) How many teams has LeBron James played for in his career? What are they?
-6) How many 50-40-90 seasons did Steph Curry have? Steve Kerr? Steve Nash?
-7) Who are the top 5 scorers in NBA history, ranked from most to least points?
-8) What is the order of players who have the most championships?
-9) How many seasons did Steph Curry score more than 25 points per game?
-10) How many 50+ point games does Michael Jordan have in his career compared to LeBron James and Kobe Bryant?
+1) What is the average free-throw percentage of each player in the database in 2021?
+2) What year was Steph Curry's highest scoring season?
+3) How many teams has LeBron James played for in his career? What are they?
+4) Who had 50-40-90 seasons? 
+5) Who are the top 5 scorers in the database?
+	- Highest scoring points in a regular season game.
+	- Create a view to hold the player_id, name, game date, and total points for that game.
+6) Create a view that shows each player's points for each game, their age on that game, and the date for that game.
+7) What is the order of players who have the most championships?
+8) How many seasons did Steph Curry score more than 25 points per game? Changed query to include more players: LeBron, KD, Kyrie?
+9) How many points does Steph curry have throughout his career? How many 3pm?
+10) How many 50+ point games does LeBron James have in his career compared to Stephen Curry?
+	- Count the 50 point games for each player in the list of 50+ points.
 11) Who was the youngest player to win the MVP award?
 12) Who was the oldest player to win the MVP award?
 13) How many NBA players played for 5 or more teams in their careers? What were the teams?
-14) Who are the players who won the finals MVP, and what were their stats in the finals?
-15) On average, how many seasons does it take for a player to win a championship?
-16) What is the average age of a regular-season MVP, and what were their stats?
-17) What is the worst regular season record, and what were the stats for that team?
-18) What was the best regular season record, and what were the stats?
-19) How many more 30 PPG seasons does Michael Jordan have over LeBron James?
-20) What was the season with the lowest PPG and still won MVP?
+14) How many points per game did Lebron James score in the 2010-11 season?
+15a) On average, how many seasons does it take for a player to win a championship?
+15b) What is the average age of a player when they win a championship?
+16)
+	- How long has LeBron James been in the NBA?
+	- How many minutes has he played?
+	- How many total points?
+	- What is is career ppg?
+	- Calculate the total points given the total seasons and the avg career ppg.
+17a) What was the best regular season record, and what were the stats?
+17b) What is the worst regular season record, and what were the stats for that team?
+18) Which team has the most MVPS? And who is the head Coach?
+19) How many more 30 PPG seasons does James Harden have over Stephen Curry?
+20) What was the season with the lowest PPG and still won MVP? What about the highes?
+	- And what was the record, and age of the player?
+Extra) Which coach has the highest winning percentage in 2024-25?
+Extra) What is the 2023-24 mvps home ppg vs away ppg?
+
+## Updates
+
+Throughout this project, I added dozens of views to the SQL. I played with indexes to speed
+up query execution. And I put all of my observations and answers to the questions in the 
+[Deliverable 3 PDF](https://github.com/nmetens/nba-database/blob/main/Deliverable%203%20Questions%20to%20Queries%20on%20the%20NBA%20Database.pdf). I used the nba_api to extract rows of data from my favorite players, 
+added them to tables through Python functions I created, and then performed many queries 
+that joined multiple tables in order to answer each question. Some questions needed to change
+because the nba_api doesn't have any data before the 2008-09 NBA season. 
+
+## Conclusion
+
+I learned a ton in this project. I had fun because I chose a topic of interest and was able to 
+dive deeper on the backend instead of using the front end on nba.com. I learned how to connect
+API calls to Python, and with the psycopg2 module, I was able to connect Python to SQL.
+
+My final overview and presentation slide for this project are in the [NBA Statistics.pdf](https://github.com/nmetens/nba-database/blob/main/NBA%20Statistics.pdf).
 
 # Resources:
 
-For creating this database, I plan on using [this website](https://www.basketball-reference.com). 
-This website has all of the NBA data from each year in the history of the NBA in easy to use format. 
-I’ll have access tables that can be turned into csv files. This will make it simple to transfer the 
-data into tables in the database.
-
-I also will be using a Python module called nba_api which uses all the data from NBA.com at 
+For this project, I used a Python module called nba_api which uses all the data from NBA.com at 
 endpoints on the web that are accessible via Python and store the data into JSON format. The documentation 
 for this module is found on [GitHub and is open source](https://github.com/swar/nba_api/blob/master/docs/nba_api/stats/static/players.md). 
-This way, I’ll be able to practice data science in Python and also manage my database using PostgreSQL. 
-I’m excited to learn and get started with my database.
+I used data science in Python and also managed my database using PostgreSQL. 
 
 ## List of Sources
 
