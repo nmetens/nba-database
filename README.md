@@ -18,7 +18,9 @@ trophies they have. I sometimes check the 3-point and free-throw percentage. I l
 good performances because they make my heart beat faster. Creating a database with my favorite players 
 and data will give me lots of practice and easily accessible information I can update and reference in the future.
 
-## 23 Questions answered by the database
+This graduate student project is for the Intro to Database class at Portland State.
+
+## 24 Questions answered by the database
 
 1) What is the average free-throw percentage of each player in the database in 2021?
 2) What year was Steph Curry's highest scoring season?
@@ -30,9 +32,9 @@ and data will give me lots of practice and easily accessible information I can u
 6) Create a view that shows each player's points for each game, their age on that game, and the date for that game.
 7) What is the order of players who have the most championships?
 8) How many seasons did Steph Curry score more than 25 points per game? Changed query to include more players: LeBron, KD, Kyrie?
-9) How many points does Steph curry have throughout his career? How many 3pm?
+9) How many points does Steph Curry have throughout his career? How many 3-pointers were made?
 10) How many 50+ point games does LeBron James have in his career compared to Stephen Curry?
-	- Count the 50 point games for each player in the list of 50+ points.
+	- Count the 50-point games for each player in the list of 50+ points.
 11) Who was the youngest player to win the MVP award?
 12) Who was the oldest player to win the MVP award?
 13) How many NBA players played for 5 or more teams in their careers? What were the teams?
@@ -42,16 +44,16 @@ and data will give me lots of practice and easily accessible information I can u
 16) How long has LeBron James been in the NBA?
 	- How many minutes has he played?
 	- How many total points?
-	- What is is career ppg?
-	- Calculate the total points given the total seasons and the avg career ppg.
+	- What is career PPG?
+	- Calculate the total points given the total seasons and the average career PPG.
 17) What was the best regular season record, and what were the stats?
-18) What is the worst regular season record, and what were the stats for that team?
+18) What is the worst regular-season record, and what were the stats for that team?
 19) Which team has the most MVPS? And who is the head Coach?
 20) How many more 30 PPG seasons does James Harden have over Stephen Curry?
-21) What was the season with the lowest PPG and still won MVP? What about the highes?
-	- And what was the record, and age of the player?
+21) What was the season with the lowest PPG and still won MVP? What about the highest?
+	- And what was the record and age of the player?
 22) Which coach has the highest winning percentage in 2024-25?
-23) What is the 2023-24 mvps home ppg vs away ppg?
+23) Who are the 2023-24 MVPs' home ppg vs away ppg?
 
 ## Updates
 
@@ -59,37 +61,37 @@ Throughout this project, I added dozens of views to the SQL. I played with index
 up query execution. And I put all of my observations and answers to the questions in the 
 [Deliverable 3 PDF](https://github.com/nmetens/nba-database/blob/main/Deliverable%203%20Questions%20to%20Queries%20on%20the%20NBA%20Database.pdf). I used the nba_api to extract rows of data from my favorite players, 
 added them to tables through Python functions I created, and then performed many queries 
-that joined multiple tables in order to answer each question. Some questions needed to change
+that joined multiple tables to answer each question. Some questions needed to change
 because the nba_api doesn't have any data before the 2008-09 NBA season. I also had so much fun
 that I added some extra questions because I was curious about the results.
 
 ## Conclusion
 
 I learned a ton in this project. I had fun because I chose a topic of interest and was able to 
-dive deeper on the backend instead of using the front end on nba.com. I learned how to connect
+dive deeper into the backend instead of using the front end on nba.com. I learned how to connect
 API calls to Python, and with the psycopg2 module, I was able to connect Python to SQL.
 
 My final overview and presentation slide for this project are in the [NBA Statistics.pdf](https://github.com/nmetens/nba-database/blob/main/NBA%20Statistics.pdf).
 
 # Resources:
 
-For this project, I used a Python module called nba_api which uses all the data from NBA.com at 
-endpoints on the web that are accessible via Python and store the data into JSON format. The documentation 
+For this project, I used a Python module called nba_api, which uses all the data from NBA.com at 
+endpoints on the web that are accessible via Python and stores the data in JSON format. The documentation 
 for this module is found on [GitHub and is open source](https://github.com/swar/nba_api/blob/master/docs/nba_api/stats/static/players.md). 
 I used data science in Python and also managed my database using PostgreSQL. 
 
 ## List of Sources
 
-- For creating this database, I plan on using the [basketball-reference](https://www.basketball-reference.com) site
 - More NBA data through the [nba_api](https://github.com/swar/nba_api/blob/master/docs/nba_api/stats/static/players.md)
 - [env variables](https://developer.vonage.com/en/blog/python-environment-variables-a-primer)
 - [virtual environment](https://python.land/virtual-environments/virtualenv)
-- [Postresql Docs](https://www.postgresql.org/docs/current/runtime-config-connection.html)
-- Postresql Python Library [Psycopg](https://www.psycopg.org/docs/)
+- [PostgreSQL Docs](https://www.postgresql.org/docs/current/runtime-config-connection.html)
+- PostgreSQL Python Library [Psycopg](https://www.psycopg.org/docs/)
 - [Port for signing into the PSU database](https://www.postgresql.org/docs/current/runtime-config-connection.html)
-- [Looping throw file](https://docs.python.org/3/tutorial/inputoutput.html#methods-of-file-objects)
+- [Looping through file](https://docs.python.org/3/tutorial/inputoutput.html#methods-of-file-objects)
 - [Cursor for db queries](https://www.freecodecamp.org/news/postgresql-in-python/)
 - [Insert Formatting](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html)
+- [Pandas Dataframe Documentation](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html)
 
 # Tutorials
 
@@ -97,7 +99,7 @@ I used data science in Python and also managed my database using PostgreSQL.
     `export variable_name="{your_value}"`
     `echo $variable_name`
 
-- To Set up the virtual environment: 
+- To set up the virtual environment: 
     `python3 -m venv myvenv`
     `source myvenv/bin/activate`
     `deactivate`
